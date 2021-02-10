@@ -1,4 +1,3 @@
-const player = GetPlayerPed(-1);
 const playerid = PlayerId();
 
 const alert = (msg) =>{
@@ -13,28 +12,24 @@ const notify = (msg) =>{
     EndTextCommandThefeedPostTicker(true,false);
 }
 
-const giveWeapon = (hash) => {
-    GiveWeaponToPed(player, GetHashKey(hash), 999, false, false)
+const giveWeapon = (weapons) => {
+    const player = GetPlayerPed(-1);
+    weapons.forEach(weapon => {
+        notify(`Player given weapon ${weapon.substring(7).toUpperCase()}`)
+        GiveWeaponToPed(player, GetHashKey(weapon), 999, false, false)
+    });    
 }
 
 const removeWeapons = () =>{
+    const player = GetPlayerPed(-1);
     RemoveAllPedWeapons(player, true);
     notify('~r~Cleared All Weapons')
 }
+
 const h_key = 74
 
 //Citizen.Wait()
 Wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
-//Citizen.CreateThread
-setTick(async () => {
-    await Wait(1);
-    if (IsControlJustReleased(1, h_key)) {
-        giveWeapon('weapon_Pistol');
-        giveWeapon('weapon_knife');
-        alert("~b~Given Weapons with ~INPUT_VEH_HEADLIGHT~");
-    }
-})
 
 const antiroll = () => {
     DisableControlAction(0, 22, true);
@@ -47,10 +42,13 @@ setTick(async () => {
         //console.log('aiming')
         await Wait(5);
     }
+    if (IsControlJustReleased(1, h_key)) {
+        emit('h_key', ['weapon_Pistol', 'weapon_knife'])
+    }
 })
 
 on('aimdownsights', antiroll)
+on('h_key', giveWeapon)
 RegisterCommand('clear', removeWeapons);
 
 //SetPedUsingActionMode(player, false, -1, "DEFAULT_ACTION")
-

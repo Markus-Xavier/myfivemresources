@@ -1,4 +1,5 @@
 const player = GetPlayerPed(-1);
+const playerid = PlayerId();
 
 const alert = (msg) =>{
     BeginTextCommandDisplayHelp('STRING');
@@ -20,9 +21,6 @@ const removeWeapons = () =>{
     RemoveAllPedWeapons(player, true);
     notify('~r~Cleared All Weapons')
 }
-
-
-
 const h_key = 74
 
 //Citizen.Wait()
@@ -38,5 +36,21 @@ setTick(async () => {
     }
 })
 
+const antiroll = () => {
+    DisableControlAction(0, 22, true);
+}
+
+setTick(async () => {
+    //console.log(IsControlPressed(0, 25))
+    while (IsControlPressed(0, 25)) {
+        emit('aimdownsights')
+        //console.log('aiming')
+        await Wait(5);
+    }
+})
+
+on('aimdownsights', antiroll)
 RegisterCommand('clear', removeWeapons);
+
+//SetPedUsingActionMode(player, false, -1, "DEFAULT_ACTION")
 

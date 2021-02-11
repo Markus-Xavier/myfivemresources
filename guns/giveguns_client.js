@@ -43,12 +43,20 @@ setTick(async () => {
         await Wait(5);
     }
     if (IsControlJustReleased(1, h_key)) {
-        emit('h_key', ['weapon_Pistol', 'weapon_knife'])
+        emit('h_key', ['weapon_Pistol', 'weapon_knife', 'weapon_assaultrifle'])
     }
 })
+
+// setTick(async () => {
+//     const player = GetPlayerPed(-1);
+//     while (true){
+//         SetPedUsingActionMode(player, true, -1, "DEFAULT_ACTION")
+//         await Wait(1);
+//     }
+// })
 
 on('aimdownsights', antiroll)
 on('h_key', giveWeapon)
 RegisterCommand('clear', removeWeapons);
 
-//SetPedUsingActionMode(player, false, -1, "DEFAULT_ACTION")
+// SetPedUsingActionMode(player, false, -1, "DEFAULT_ACTION")

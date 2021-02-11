@@ -20,20 +20,36 @@ const giveWeapon = (weapons) => {
     });    
 }
 
+const weaponComponent = (weaponHash, component) =>{
+    if (HasPedGotWeapon(GetPlayerPed(-1), GetHashKey(weaponHash), false)){
+        GiveWeaponComponentToPed(GetPlayerPed(-1), GetHashKey(weaponHash), GetHashKey(component));
+    }
+}
+
 const removeWeapons = () =>{
     const player = GetPlayerPed(-1);
     RemoveAllPedWeapons(player, true);
     notify('~r~Cleared All Weapons')
 }
 
-const h_key = 74
-
-//Citizen.Wait()
-Wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+const dieCommand = () =>{
+    SetEntityHealth(PlayerPedId(), 0)
+    notify('~r~You died.')
+}
 
 const antiroll = () => {
     DisableControlAction(0, 22, true);
 }
+
+const h_key = 74
+
+let x = 10000;
+let i = 0;
+
+//Citizen.Wait()
+Wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+
 
 setTick(async () => {
     //console.log(IsControlPressed(0, 25))
@@ -43,9 +59,12 @@ setTick(async () => {
         await Wait(5);
     }
     if (IsControlJustReleased(1, h_key)) {
-        emit('h_key', ['weapon_Pistol', 'weapon_knife', 'weapon_assaultrifle'])
+        emit('h_key', ['weapon_Pistol', 'weapon_knife', 'weapon_assaultrifle']);
+            weaponComponent('weapon_Pistol', 'COMPONENT_AT_PI_SUPP_02');
     }
 })
+
+
 
 // setTick(async () => {
 //     const player = GetPlayerPed(-1);
@@ -58,5 +77,6 @@ setTick(async () => {
 on('aimdownsights', antiroll)
 on('h_key', giveWeapon)
 RegisterCommand('clear', removeWeapons);
+RegisterCommand('die', dieCommand);
 
 // SetPedUsingActionMode(player, false, -1, "DEFAULT_ACTION")

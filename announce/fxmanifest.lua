@@ -6,5 +6,5 @@ description ''
 version '1.0.0'
 
 
-server_script 'annouce_server.js'
-client_script 'annouce_client.js'
+server_script 'announce_server.js'
+client_script 'announce_client.js'
